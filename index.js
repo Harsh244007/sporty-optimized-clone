@@ -62,7 +62,11 @@ app.use("/css", express.static(__dirname + '/css'));
 app.use("/js", express.static(__dirname + '/js'));
 app.use("/fonts", express.static(__dirname + '/fonts'));
 
-app.get("*", (e, p) => {
+app.get("/news/latest", (e, p) => {
     p.sendFile(path.join(__dirname, "/index.html"));
 });
+
+app.get("*",(req,res)=>{
+    res.redirect("/news/latest")
+})
 app.listen(port, () => { })
