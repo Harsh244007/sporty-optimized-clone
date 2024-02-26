@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const locateData = require("./apis/data/locate.json")
 const useragent = require("express-useragent");
 const latestData = require("./apis/data/latest.json")
+const latestmData = require("./apis/data/latest-m.json")
 const trendsData = require("./apis/data/trends.json")
 const videosData = require("./apis/data/videos.json")
 const infoData = require("./apis/data/info.json")
@@ -32,8 +33,11 @@ app.get("/middle/feed/trends", (req, res) => {
 app.get("/middle/feed/videos", (req, res) => {
     res.send(videosData)
 })
-app.get("/middle/feed/latest", (req, res) => {
-    res.send(latestData)
+app.get("/middle/feed/latest", (e, res) => {
+
+    const result = e.useragent;
+
+    res.send(result.isMobile ? latestmData : latestData)
 })
 
 app.get("/api/middle/feed/trends", (req, res) => {
@@ -42,8 +46,11 @@ app.get("/api/middle/feed/trends", (req, res) => {
 app.get("/api/middle/feed/videos", (req, res) => {
     res.send(videosData)
 })
-app.get("/api/middle/feed/latest", (req, res) => {
-    res.send(latestData)
+app.get("/api/middle/feed/latest", (e, res) => {
+
+    const result = e.useragent;
+
+    res.send(result.isMobile ? latestmData : latestData)
 })
 
 app.get("/sms-center/captcha/config/info", (req, res) => {
@@ -69,7 +76,7 @@ app.get("/news/latest", (e, p) => {
     p.sendFile(path.join(__dirname, result.isMobile ? "/index-m.html" : "/index.html"));
 });
 
-app.get("*",(req,res)=>{
+app.get("*", (req, res) => {
     res.redirect("/news/latest")
 })
 app.listen(port, () => { })
