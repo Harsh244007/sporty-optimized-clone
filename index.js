@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const locateData = require("./apis/data/locate.json")
+const useragent = require("express-useragent");
 const latestData = require("./apis/data/latest.json")
 const trendsData = require("./apis/data/trends.json")
 const videosData = require("./apis/data/videos.json")
@@ -9,6 +10,7 @@ const path = require("path");
 const app = express();
 const port = 5508;
 app.use(bodyParser.json());
+app.use(useragent.express());
 
 app.get("/patron/country/locate", (req, res) => {
     res.send(locateData)
@@ -63,7 +65,8 @@ app.use("/js", express.static(__dirname + '/js'));
 app.use("/fonts", express.static(__dirname + '/fonts'));
 
 app.get("/news/latest", (e, p) => {
-    p.sendFile(path.join(__dirname, "/index.html"));
+    const result = e.useragent;
+    p.sendFile(path.join(__dirname, result.isMobile ? "/index-m.html" : "/index.html"));
 });
 
 app.get("*",(req,res)=>{
